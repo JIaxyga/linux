@@ -185,7 +185,7 @@
 &i2c_2 {
 	status = "okay";
 
-	max98927_codec: max98927@3a {
+	codec: max98927@3a {
 		compatible = "maxim,max98927";
 		reg = <0x3a>;
 
@@ -193,8 +193,9 @@
 
 		vmon-slot-no = <1>;
 		imon-slot-no = <1>;
+		interleave_mode = <0>;
 
-		#sound-dai-cells = <1>;
+		#sound-dai-cells = <0>;
 	};
 
 	led-controller@45 {
@@ -262,8 +263,8 @@
 };
 
 &q6afedai {
-	dai@22 {
-		reg = <QUATERNARY_MI2S_RX>;
+	dai@127 {
+		reg = <QUINARY_MI2S_RX>;
 		qcom,sd-lines = <0>;
 	};
 };
@@ -406,10 +407,10 @@
 	pinctrl-0 = <&cdc_pdm_lines_act &cdc_pdm_lines_2_act &cdc_pdm_comp_lines_act &pri_lines_default &pri_ws_lines_default &ext_pa_power_on>;
 	pinctrl-1 = <&cdc_pdm_lines_sus &cdc_pdm_lines_2_sus &cdc_pdm_comp_lines_sus &pri_lines_sleep &pri_ws_lines_sleep &ext_pa_power_off>;
 
-	/*quaternary-mi2s-dai-link {
-		link-name = "Quaternary MI2S";
+	quinary-mi2s-dai-link {
+		link-name = "Quinary MI2S";
 		cpu {
-			sound-dai = <&q6afedai QUATERNARY_MI2S_RX>;
+			sound-dai = <&q6afedai QUINARY_MI2S_RX>;
 		};
 
 		platform {
@@ -417,9 +418,9 @@
 		};
 
 		codec {
-			sound-dai = <&max98927_codec>;
+			sound-dai = <&codec>;
 		};
-	};*/
+	};
 };
 
 &tlmm {
