@@ -21,6 +21,14 @@
 	qcom,msm-id = <293 0>;
 	qcom,board-id = <0x1000b 0x00>;
 
+	battery: battery {
+		compatible = "simple-battery";
+		charge-full-design-microamp-hours = <3000000>;
+		constant-charge-current-max-microamp = <1000000>;
+		voltage-min-design-microvolt = <3400000>;
+		voltage-max-design-microvolt = <4400000>;
+	};
+
 	gpio-keys {
 		compatible = "gpio-keys";
 
@@ -68,12 +76,72 @@
 		};
 	};
 
+	sensors: i2c-gpio {
+		compatible = "i2c-gpio";
+		sda-gpios = <&tlmm 14 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+		scl-gpios = <&tlmm 15 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+		i2c-gpio,delay-us = <2>;        /* ~100 kHz */
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		imu@68 {
+			compatible = "bosch,bmi120";
+			reg = <0x68>;
+
+			vdd-supply = <&pm8953_l10>;
+			vddio-supply = <&pm8953_l6>;
+
+			mount-matrix = "0", "1", "0",
+					"1", "0", "0",
+					"0", "0", "1";
+		};
+	};
+
 	vph_pwr: vph-pwr-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "vph_pwr";
 		regulator-always-on;
 		regulator-boot-on;
 	};
+};
+
+&cpr {
+	vdd-apc-supply = <&vreg_apc>;
+	vdd-apc-step-uv = <5000>;
+};
+
+&dsi0 {
+	panel: panel@0 {
+		compatible = "xiaomi,tissot-panel";
+		reg = <0>;
+
+		backlight = <&pmi8950_wled>;
+
+		reset-gpios = <&tlmm 61 GPIO_ACTIVE_LOW>;
+
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&pmx_mdss_default &mdss_te_default>;
+		pinctrl-1 = <&pmx_mdss_sleep &mdss_te_default>;
+
+		vsp-supply = <&lab_vreg>;
+		vsn-supply = <&ibb_vreg>;
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&dsi0_out>;
+			};
+		};
+	};
+};
+
+&dsi0_out {
+	data-lanes = <0 1 2 3>;
+	remote-endpoint = <&panel_in>;
+};
+
+&dsi_phy0 {
+	vddio-supply = <&pm8953_l6>;
+	vcca-supply = <&pm8953_l3>;
 };
 
 &hsusb_phy {
@@ -139,17 +207,60 @@
 	};
 };
 
+&iris {
+	vddxo-supply = <&pm8953_l7>;
+	vddrfa-supply = <&pm8953_l19>;
+	vddpa-supply = <&pm8953_l9>;
+	vdddig-supply = <&pm8953_l5>;
+
+	status = "okay";
+};
+
+&lpass {
+	status = "okay";
+};
+
+&modem {
+	status = "okay";
+
+	mss-supply = <&pm8953_s1>;
+	pll-supply = <&pm8953_l7>;
+};
+
 &pm8953_resin {
+	status = "okay";
 	linux,code = <KEY_VOLUMEDOWN>;
+};
+
+&pmi8950_fg {
+	monitored-battery = <&battery>;
+	power-supplies = <&pmi8950_smbcharger>;
+	status = "okay";
+};
+
+&pmi8950_smbcharger {
+	monitored-battery = <&battery>;
 	status = "okay";
 };
 
 &pmi8950_wled {
+	status = "okay";
+
 	qcom,num-strings = <2>;
 	qcom,external-pfet;
 	qcom,cabc;
+};
 
+&pronto {
 	status = "okay";
+	vddpx-supply = <&pm8953_l5>;
+};
+
+&q6afedai {
+	dai@127 {
+		reg = <QUINARY_MI2S_RX>;
+		qcom,sd-lines = <0>;
+	};
 };
 
 &rpm_requests {
@@ -291,6 +402,31 @@
 	status = "okay";
 };
 
+&sound_card {
+	status = "okay";
+
+	model = "msm8916";
+
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&cdc_pdm_lines_act &cdc_pdm_lines_2_act &cdc_pdm_comp_lines_act &pri_lines_default &pri_ws_lines_default &ext_pa_power_on>;
+	pinctrl-1 = <&cdc_pdm_lines_sus &cdc_pdm_lines_2_sus &cdc_pdm_comp_lines_sus &pri_lines_sleep &pri_ws_lines_sleep &ext_pa_power_off>;
+
+	quinary-mi2s-dai-link {
+		link-name = "Quinary MI2S";
+		cpu {
+			sound-dai = <&q6afedai QUINARY_MI2S_RX>;
+		};
+
+		platform {
+			sound-dai = <&q6routing>;
+		};
+
+		codec {
+			sound-dai = <&max98927_codec>;
+		};
+	};
+};
+
 &tlmm {
 	gpio-reserved-ranges = <0 4>, <16 4>, <135 4>;
 
@@ -301,11 +437,82 @@
 		bias-pull-up;
 	};
 
+	pmx_mdss_default: pmx-mdss-default-state {
+		pins = "gpio61";
+		function = "gpio";
+		drive-strength = <8>;
+		bias-disable = <0>;
+		output-high;
+	};
+
+	pmx_mdss_sleep: pmx-mdss-sleep-state {
+		pins = "gpio61";
+		function = "gpio";
+		drive-strength = <2>;
+		bias-pull-down;
+	};
+
 	ts_int_default: ts-int-default-state {
 		pins = "gpio65";
 		function = "gpio";
 		drive-strength = <2>;
 		bias-pull-up;
+	};
+
+	cdc_mclk2_default: cdc-mclk2-default-state {
+		pins = "gpio66";
+		function = "pri_mi2s";
+		drive-strength = <8>;
+		bias-disable;
+	};
+
+	cdc_mclk2_sleep: cdc-mclk2-sleep-state {
+		pins = "gpio66";
+		function = "pri_mi2s";
+		drive-strength = <2>;
+		bias-pull-down;
+	};
+
+	pri_lines_default: pri-lines-default-state {
+		pins = "gpio88", "gpio91", "gpio93";
+		function = "pri_mi2s";
+		drive-strength = <8>;
+	};
+
+	pri_lines_sleep: pri-lines-sleep-state {
+		pins = "gpio88", "gpio91", "gpio93";
+		function = "pri_mi2s";
+		drive-strength = <2>;
+		bias-pull-down;
+	};
+
+	pri_ws_lines_default: pri-ws-default-state {
+		pins = "gpio92";
+		function = "pri_mi2s_ws";
+		drive-strength = <8>;
+	};
+
+	pri_ws_lines_sleep: pri-ws-sleep-state {
+		pins = "gpio92";
+		function = "pri_mi2s_ws";
+		drive-strength = <2>;
+		bias-pull-down;
+	};
+
+	ext_pa_power_on: ext-pa-power-on-state {
+		pins = "gpio141";
+		function = "gpio";
+		drive-strength = <16>;
+		bias-disable;
+		output-high;
+	};
+
+	ext_pa_power_off: ext-pa-power-off-state {
+		pins = "gpio141";
+		function = "gpio";
+		drive-strength = <16>;
+		bias-disable;
+		output-low;
 	};
 };
 
