@@ -11,7 +11,6 @@
 #include <dt-bindings/leds/common.h>
 
 /delete-node/ &adsp_fw_mem;
-/delete-node/ &qseecom_mem;
 /delete-node/ &wcnss_fw_mem;
 
 / {
@@ -51,6 +50,7 @@
 	};
 
 	reserved-memory {
+		/delete-node/memory@85b00000;
 		qseecom_mem: qseecom@84a00000 {
 			reg = <0x0 0x84a00000 0x0 0x1900000>;
 			no-map;
@@ -383,16 +383,10 @@
 };
 
 &sdhc_1 {
-	vmmc-supply = <&pm8953_l8>;
-	vqmmc-supply = <&pm8953_l5>;
-
 	status = "okay";
 };
 
 &sdhc_2 {
-	vmmc-supply = <&pm8953_l11>;
-	vqmmc-supply = <&pm8953_l12>;
-
 	cd-gpios = <&tlmm 133 GPIO_ACTIVE_HIGH>;
 
 	pinctrl-names = "default", "sleep";
