@@ -2064,7 +2064,7 @@
 					type = "passive";
 				};
 
-				cpu0_crit: cpu_crit {
+				cpu0_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2112,7 +2112,7 @@
 					type = "passive";
 				};
 
-				cpu1_crit: cpu_crit {
+				cpu1_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2160,7 +2160,7 @@
 					type = "passive";
 				};
 
-				cpu2_crit: cpu_crit {
+				cpu2_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2208,7 +2208,7 @@
 					type = "passive";
 				};
 
-				cpu3_crit: cpu_crit {
+				cpu3_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2256,7 +2256,7 @@
 					type = "passive";
 				};
 
-				cpu4_crit: cpu_crit {
+				cpu4_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2304,7 +2304,7 @@
 					type = "passive";
 				};
 
-				cpu5_crit: cpu_crit {
+				cpu5_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2352,7 +2352,7 @@
 					type = "passive";
 				};
 
-				cpu6_crit: cpu_crit {
+				cpu6_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2392,7 +2392,7 @@
 					type = "passive";
 				};
 
-				cpu7_crit: cpu_crit {
+				cpu7_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2432,7 +2432,7 @@
 					type = "passive";
 				};
 
-				cpu8_crit: cpu_crit {
+				cpu8_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2472,7 +2472,7 @@
 					type = "passive";
 				};
 
-				cpu9_crit: cpu_crit {
+				cpu9_crit: cpu-crit {
 					temperature = <110000>;
 					hysteresis = <1000>;
 					type = "critical";
@@ -2506,7 +2506,7 @@
 					type = "hot";
 				};
 
-				aoss0_crit: aoss0_crit {
+				aoss0_crit: aoss0-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2526,7 +2526,7 @@
 					hysteresis = <2000>;
 					type = "hot";
 				};
-				cpuss0_crit: cluster0_crit {
+				cpuss0_crit: cluster0-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2546,7 +2546,7 @@
 					hysteresis = <2000>;
 					type = "hot";
 				};
-				cpuss1_crit: cluster0_crit {
+				cpuss1_crit: cluster0-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2567,7 +2567,7 @@
 					type = "passive";
 				};
 
-				gpuss0_crit: gpuss0_crit {
+				gpuss0_crit: gpuss0-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2595,7 +2595,7 @@
 					type = "passive";
 				};
 
-				gpuss1_crit: gpuss1_crit {
+				gpuss1_crit: gpuss1-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2623,7 +2623,7 @@
 					type = "hot";
 				};
 
-				aoss1_crit: aoss1_crit {
+				aoss1_crit: aoss1-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2644,7 +2644,7 @@
 					type = "hot";
 				};
 
-				cwlan_crit: cwlan_crit {
+				cwlan_crit: cwlan-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2665,7 +2665,7 @@
 					type = "hot";
 				};
 
-				audio_crit: audio_crit {
+				audio_crit: audio-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2686,7 +2686,7 @@
 					type = "hot";
 				};
 
-				ddr_crit: ddr_crit {
+				ddr_crit: ddr-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2707,7 +2707,7 @@
 					type = "hot";
 				};
 
-				q6_hvx_crit: q6_hvx_crit {
+				q6_hvx_crit: q6-hvx-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2728,7 +2728,7 @@
 					type = "hot";
 				};
 
-				camera_crit: camera_crit {
+				camera_crit: camera-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2749,7 +2749,7 @@
 					type = "hot";
 				};
 
-				mdm_crit: mdm_crit {
+				mdm_crit: mdm-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2770,7 +2770,7 @@
 					type = "hot";
 				};
 
-				mdm_dsp_crit: mdm_dsp_crit {
+				mdm_dsp_crit: mdm-dsp-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2791,7 +2791,7 @@
 					type = "hot";
 				};
 
-				npu_crit: npu_crit {
+				npu_crit: npu-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
@@ -2812,7 +2812,7 @@
 					type = "hot";
 				};
 
-				video_crit: video_crit {
+				video_crit: video-crit {
 					temperature = <110000>;
 					hysteresis = <2000>;
 					type = "critical";
