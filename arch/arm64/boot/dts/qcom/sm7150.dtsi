@@ -486,7 +486,7 @@
 			#clock-cells = <1>;
 			#reset-cells = <1>;
 			#power-domain-cells = <1>;
-			power-domains = <&rpmhpd SM7150_CX>;
+			power-domains = <&rpmhpd SC7180_CX>;
 			clocks = <&rpmhcc RPMH_CXO_CLK>,
 				 <&rpmhcc RPMH_CXO_CLK_A>,
 				 <&sleep_clk>;
@@ -535,7 +535,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -553,7 +553,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -571,7 +571,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -589,7 +589,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -607,7 +607,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -625,7 +625,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -643,7 +643,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -656,7 +656,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&qup_uart3_default>;
 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -674,7 +674,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -692,7 +692,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -705,7 +705,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&qup_uart4_default>;
 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -754,7 +754,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -772,7 +772,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -790,7 +790,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -808,7 +808,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -826,7 +826,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -844,7 +844,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -857,7 +857,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&qup_uart8_default>;
 				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -875,7 +875,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -893,7 +893,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -911,7 +911,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -924,7 +924,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&qup_uart10_default>;
 				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -942,7 +942,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				required-opps = <&rpmhpd_opp_low_svs>;
 				status = "disabled";
 			};
@@ -960,7 +960,7 @@
 				dma-names = "tx", "rx";
 				#address-cells = <1>;
 				#size-cells = <0>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -973,7 +973,7 @@
 				pinctrl-names = "default";
 				pinctrl-0 = <&qup_uart11_default>;
 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
-				power-domains = <&rpmhpd SM7150_CX>;
+				power-domains = <&rpmhpd SC7180_CX>;
 				operating-points-v2 = <&qup_opp_table>;
 				status = "disabled";
 			};
@@ -1412,8 +1412,8 @@
 			clocks = <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "xo";
 
-			power-domains = <&rpmhpd SM7150_LCX>,
-					<&rpmhpd SM7150_LMX>;
+			power-domains = <&rpmhpd SC7180_LCX>,
+					<&rpmhpd SC7180_LMX>;
 			power-domain-names = "lcx", "lmx";
 
 			memory-region = <&adsp_mem>;
@@ -1493,8 +1493,8 @@
 			clocks = <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "xo";
 
-			power-domains = <&rpmhpd SM7150_CX>,
-					<&rpmhpd SM7150_MX>;
+			power-domains = <&rpmhpd SC7180_CX>,
+					<&rpmhpd SC7180_MX>;
 			power-domain-names = "cx", "mx";
 
 			memory-region = <&cdsp_mem>;
@@ -1586,9 +1586,9 @@
 			clocks = <&rpmhcc RPMH_CXO_CLK>;
 			clock-names = "xo";
 
-			power-domains = <&rpmhpd SM7150_CX>,
-					<&rpmhpd SM7150_MX>,
-					<&rpmhpd SM7150_MSS>;
+			power-domains = <&rpmhpd SC7180_CX>,
+					<&rpmhpd SC7180_MX>,
+					<&rpmhpd SC7180_MSS>;
 			power-domain-names = "cx", "mx", "mss";
 
 			memory-region = <&mpss_mem>;
@@ -1624,7 +1624,7 @@
 
 			qcom,dll-config = <0x0007642c>;
 			qcom,ddr-config = <0x80040868>;
-			power-domains = <&rpmhpd SM7150_CX>;
+			power-domains = <&rpmhpd SC7180_CX>;
 			operating-points-v2 = <&sdhc2_opp_table>;
 			bus-width = <4>;
 
