@@ -639,6 +639,13 @@
 			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
 		};
 
+		system-cache-controller@9200000 {
+			compatible = "qcom,sm7150-llcc";
+			reg = <0 0x09200000 0 0x50000>, <0 0x09600000 0 0x50000>;
+			reg-names = "llcc_base", "llcc_broadcast_base";
+			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+		};
+
 		usb_1: usb@a6f8800 {
 			compatible = "qcom,sm7150-dwc3", "qcom,dwc3";
 			reg = <0 0x0a6f8800 0 0x400>;
@@ -687,6 +694,43 @@
 				phys = <&usb_1_hsphy>;
 				phy-names = "usb2-phy";
 			};
+		};
+
+		pdc: interrupt-controller@b220000 {
+			compatible = "qcom,sm7150-pdc", "qcom,pdc";
+			reg = <0 0x0b220000 0 0x30000>;
+			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
+			#interrupt-cells = <2>;
+			interrupt-parent = <&intc>;
+			interrupt-controller;
+		};
+
+		aoss_qmp: power-management@c300000 {
+			compatible = "qcom,sm7150-aoss-qmp", "qcom,aoss-qmp";
+			reg = <0 0x0c300000 0 0x400>;
+			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
+			mboxes = <&apss_shared 0>;
+
+			#clock-cells = <0>;
+		};
+
+		spmi_bus: spmi@c440000 {
+			compatible = "qcom,spmi-pmic-arb";
+			reg = <0 0x0c440000 0 0x0001100>,
+			      <0 0x0c600000 0 0x2000000>,
+			      <0 0x0e600000 0 0x0100000>,
+			      <0 0x0e700000 0 0x00a0000>,
+			      <0 0x0c40a000 0 0x0026000>;
+			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
+			interrupt-names = "periph_irq";
+			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
+			qcom,ee = <0>;
+			qcom,channel = <0>;
+			#address-cells = <2>;
+			#size-cells = <0>;
+			interrupt-controller;
+			#interrupt-cells = <4>;
+			cell-index = <0>;
 		};
 
 		apps_smmu: iommu@15000000 {
@@ -970,50 +1014,6 @@
 				     <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>;
 			status = "disabled";
-		};
-
-		system-cache-controller@9200000 {
-			compatible = "qcom,sm7150-llcc";
-			reg = <0 0x09200000 0 0x50000>, <0 0x09600000 0 0x50000>;
-			reg-names = "llcc_base", "llcc_broadcast_base";
-			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
-		};
-
-		pdc: interrupt-controller@b220000 {
-			compatible = "qcom,sm7150-pdc", "qcom,pdc";
-			reg = <0 0x0b220000 0 0x30000>;
-			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
-			#interrupt-cells = <2>;
-			interrupt-parent = <&intc>;
-			interrupt-controller;
-		};
-
-		aoss_qmp: power-management@c300000 {
-			compatible = "qcom,sm7150-aoss-qmp", "qcom,aoss-qmp";
-			reg = <0 0x0c300000 0 0x400>;
-			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-			mboxes = <&apss_shared 0>;
-
-			#clock-cells = <0>;
-		};
-
-		spmi_bus: spmi@c440000 {
-			compatible = "qcom,spmi-pmic-arb";
-			reg = <0 0x0c440000 0 0x0001100>,
-			      <0 0x0c600000 0 0x2000000>,
-			      <0 0x0e600000 0 0x0100000>,
-			      <0 0x0e700000 0 0x00a0000>,
-			      <0 0x0c40a000 0 0x0026000>;
-			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-			interrupt-names = "periph_irq";
-			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
-			qcom,ee = <0>;
-			qcom,channel = <0>;
-			#address-cells = <2>;
-			#size-cells = <0>;
-			interrupt-controller;
-			#interrupt-cells = <4>;
-			cell-index = <0>;
 		};
 	};
 
