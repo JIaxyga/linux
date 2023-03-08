@@ -117,7 +117,7 @@
 
 &apps_rsc {
 	pm7150-rpmh-regulators {
-		compatible = "qcom,pm7150-rpmh-regulators";
+		compatible = "qcom,pm6150-rpmh-regulators";
 		qcom,pmic-id = "a";
 
 		vdd-s1-supply = <&vph_pwr>;
@@ -260,7 +260,7 @@
 	};
 
 	pm7150l-rpmh-regulators {
-		compatible = "qcom,pm7150l-rpmh-regulators";
+		compatible = "qcom,pm8150l-rpmh-regulators";
 		qcom,pmic-id = "c";
 
 		vdd-s1-supply = <&vph_pwr>;
