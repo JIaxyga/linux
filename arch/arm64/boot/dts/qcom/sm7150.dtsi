@@ -494,7 +494,7 @@
 		};
 
 		gpi_dma0: dma-controller@800000 {
-			compatible = "qcom,sdm845-gpi-dma";
+			compatible = "qcom,sm7150-gpi-dma", "qcom,sdm845-gpi-dma";
 			reg = <0 0x00800000 0 0x60000>;
 			interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
@@ -713,7 +713,7 @@
 		};
 
 		gpi_dma1: dma-controller@a00000 {
-			compatible = "qcom,sm7150-gpi-dma";
+			compatible = "qcom,sm7150-gpi-dma", "qcom,sdm845-gpi-dma";
 			reg = <0 0x00a00000 0 0x60000>;
 			interrupts = <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
@@ -1399,7 +1399,7 @@
 		};
 
 		remoteproc_adsp: remoteproc@62400000 {
-			compatible = "qcom,sm7150-adsp-pas";
+			compatible = "qcom,sm7150-adsp-pas", "qcom,sm6350-adsp-pas";
 			reg = <0 0x62400000 0 0x100>;
 
 			interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
@@ -1572,7 +1572,7 @@
 		};
 
 		remoteproc_mpss: remoteproc@4080000 {
-			compatible = "qcom,sm7150-mpss-pas", "qcom,sc7180-mpss-pas";
+			compatible = "qcom,sm7150-mpss-pas", "qcom,sm6350-mpss-pas";
 			reg = <0 0x04080000 0 0x4040>;
 
 			interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
