@@ -19,7 +19,7 @@
 	qcom,board-id = <34 0>;
 
 	chosen {
-		#address-cells = <2>;
+		/*#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
 		framebuffer@9c000000 {
@@ -30,7 +30,7 @@
 			stride = <(1080 * 4)>;
 			format = "a8r8g8b8";
 			clocks = <&gcc GCC_DISP_HF_AXI_CLK>;
-		};
+		};*/
 	};
 
 	reserved-memory {
@@ -53,6 +53,52 @@
 			qcom,vmid = <QCOM_SCM_VMID_MSS_MSA>;
 		};
 	};
+};
+
+&dispcc {
+	status = "okay";
+};
+
+&dsi0 {
+	status = "okay";
+
+	panel: panel@0 {
+		compatible = "huaxing,nt36672c";
+		reg = <0>;
+
+		reset-gpios = <&tlmm 8 GPIO_ACTIVE_LOW>;
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&dsi0_out>;
+			};
+		};
+	};
+};
+
+&dsi0_out {
+	data-lanes = <0 1 2 3>;
+	remote-endpoint = <&panel_in>;
+};
+
+&dsi_phy {
+	status = "okay";
+};
+
+&mdp {
+	status = "okay";
+};
+
+&mdss {
+	status = "okay";
+};
+
+&gmu {
+	status = "okay";
+};
+
+&gpu {
+	status = "okay";
 };
 
 &apps_rsc {
@@ -181,7 +227,7 @@
 
 &spi0 {
 	clock-frequency = <50000000>;
-	status = "okay";
+	status = "disabled";
 
 	touchscreen@0 {
 		compatible = "novatek,NVT-ts-spi";
