@@ -1627,13 +1627,17 @@
 
 			#cooling-cells = <2>;
 
+			zap-shader {
+				memory-region = <&gpu_mem>;
+			};
+
 			gpu_opp_table: opp-table {
 				compatible = "operating-points-v2";
 
-				opp-825000000 {
+				/*opp-825000000 {
 					opp-hz = /bits/ 64 <825000000>;
 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-				};
+				};*/
 
 				opp-800000000 {
 					opp-hz = /bits/ 64 <800000000>;
@@ -1702,7 +1706,7 @@
 			      <0 0x0b490000 0 0x10000>;
 			reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
 			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-				   <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "hfi", "gmu";
 			clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
 			       <&gpucc GPU_CC_CXO_CLK>,
@@ -2045,7 +2049,7 @@
 		};
 
 		dispcc: clock-controller@af00000 {
-			compatible = "qcom,sm7150-dispcc";
+			compatible = "qcom,dispcc-sm7150";
 			reg = <0 0x0af00000 0 0x200000>;
 			clocks = <&rpmhcc RPMH_CXO_CLK>,
 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
