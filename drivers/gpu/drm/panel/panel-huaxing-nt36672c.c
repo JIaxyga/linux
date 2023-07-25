@@ -53,6 +53,8 @@ static int nt36672c_on(struct nt36672c *ctx)
 	struct device *dev = &dsi->dev;
 	int ret;
 
+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+
 	dsi_dcs_write_seq(dsi, 0xff, 0x10);
 	dsi_dcs_write_seq(dsi, 0xfb, 0x01);
 	dsi_dcs_write_seq(dsi, 0xb0, 0x00);
@@ -180,6 +182,8 @@ static int nt36672c_off(struct nt36672c *ctx)
 	struct mipi_dsi_device *dsi = ctx->dsi;
 	struct device *dev = &dsi->dev;
 	int ret;
+
+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
 
 	dsi_dcs_write_seq(dsi, 0xff, 0x10);
 	dsi_dcs_write_seq(dsi, 0xfb, 0x01);
@@ -386,3 +390,4 @@ module_mipi_dsi_driver(nt36672c_driver);
 MODULE_AUTHOR("linux-mdss-dsi-panel-driver-generator <fix@me>"); // FIXME
 MODULE_DESCRIPTION("DRM driver for nt36672c huaxing fhd video mode dsi panel");
 MODULE_LICENSE("GPL v2");
+
