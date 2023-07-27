@@ -1644,8 +1644,18 @@
 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
 				};
 
+				opp-700000000 {
+					opp-hz = /bits/ 64 <700000000>;
+					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+				};
+
 				opp-650000000 {
 					opp-hz = /bits/ 64 <650000000>;
+					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
+				};
+
+				opp-610000000 {
+					opp-hz = /bits/ 64 <610000000>;
 					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
 				};
 
