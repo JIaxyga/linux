@@ -23,6 +23,7 @@
 #include "clk-rcg.h"
 #include "clk-branch.h"
 #include "clk-alpha-pll.h"
+#include "gdsc.h"
 
 enum {
 	P_BI_TCXO,
@@ -258,6 +259,32 @@ static struct clk_branch video_cc_venus_ahb_clk = {
 	},
 };
 
+static struct gdsc venus_gdsc = {
+	.gdscr = 0x814,
+	.pd = {
+		.name = "venus_gdsc",
+	},
+	.pwrsts = PWRSTS_OFF_ON,
+};
+
+static struct gdsc vcodec0_gdsc = {
+	.gdscr = 0x874,
+	.pd = {
+		.name = "vcodec0_gdsc",
+	},
+	.flags = HW_CTRL,
+	.pwrsts = PWRSTS_OFF_ON,
+};
+
+static struct gdsc vcodec1_gdsc = {
+	.gdscr = 0x8b4,
+	.pd = {
+		.name = "vcodec1_gdsc",
+	},
+	.flags = HW_CTRL,
+	.pwrsts = PWRSTS_OFF_ON,
+};
+
 static struct clk_regmap *video_cc_sm7150_clocks[] = {
 	[VIDEO_PLL0] = &video_pll0.clkr,
 	[VIDEO_CC_IRIS_AHB_CLK] = &video_cc_iris_ahb_clk.clkr,
@@ -272,6 +299,12 @@ static struct clk_regmap *video_cc_sm7150_clocks[] = {
 	[VIDEO_CC_XO_CLK_SRC] = &video_cc_xo_clk_src.clkr,
 };
 
+static struct gdsc *video_cc_sm7150_gdscs[] = {
+	[VENUS_GDSC] = &venus_gdsc,
+	[VCODEC0_GDSC] = &vcodec0_gdsc,
+	[VCODEC1_GDSC] = &vcodec1_gdsc,
+};
+
 static const struct regmap_config video_cc_sm7150_regmap_config = {
 	.reg_bits	= 32,
 	.reg_stride	= 4,
@@ -284,6 +317,8 @@ static const struct qcom_cc_desc video_cc_sm7150_desc = {
 	.config = &video_cc_sm7150_regmap_config,
 	.clks = video_cc_sm7150_clocks,
 	.num_clks = ARRAY_SIZE(video_cc_sm7150_clocks),
+	.gdscs = video_cc_sm7150_gdscs,
+	.num_gdscs = ARRAY_SIZE(video_cc_sm7150_gdscs),
 };
 
 static const struct of_device_id video_cc_sm7150_match_table[] = {
