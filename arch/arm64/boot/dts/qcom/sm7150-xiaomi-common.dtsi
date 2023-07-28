@@ -351,7 +351,7 @@
 	panel: panel@0 {
 		reg = <0>;
 
-		reset-gpios = <&tlmm 8 GPIO_ACTIVE_LOW>;
+		reset-gpios = <&pm8150l_gpios 9 GPIO_ACTIVE_LOW>;
 
 		port {
 			panel_in: endpoint {
