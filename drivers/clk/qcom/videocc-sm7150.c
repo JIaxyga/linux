@@ -110,7 +110,7 @@ static struct clk_rcg2 video_cc_iris_clk_src = {
 	.clkr.hw.init = &(struct clk_init_data){
 		.name = "video_cc_iris_clk_src",
 		.parent_names = video_cc_parent_names_0,
-		.num_parents = 5,
+		.num_parents = ARRAY_SIZE(video_cc_parent_names_0),
 		.flags = CLK_SET_RATE_PARENT,
 		.ops = &clk_rcg2_ops,
 	},
@@ -130,7 +130,7 @@ static struct clk_rcg2 video_cc_xo_clk_src = {
 	.clkr.hw.init = &(struct clk_init_data){
 		.name = "video_cc_xo_clk_src",
 		.parent_names = video_cc_parent_names_2,
-		.num_parents = 2,
+		.num_parents = ARRAY_SIZE(video_cc_parent_names_2),
 		.ops = &clk_rcg2_ops,
 	},
 };
