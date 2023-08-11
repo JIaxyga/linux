@@ -322,7 +322,7 @@ static const struct qcom_cc_desc video_cc_sm7150_desc = {
 };
 
 static const struct of_device_id video_cc_sm7150_match_table[] = {
-	{ .compatible = "qcom,videocc-sm7150" },
+	{ .compatible = "qcom,sm7150-videocc" },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, video_cc_sm7150_match_table);
@@ -330,22 +330,16 @@ MODULE_DEVICE_TABLE(of, video_cc_sm7150_match_table);
 static int video_cc_sm7150_probe(struct platform_device *pdev)
 {
 	struct regmap *regmap;
-	int ret;
 
 	regmap = qcom_cc_map(pdev, &video_cc_sm7150_desc);
-	if (IS_ERR(regmap)) {
-		pr_err("Failed to map the video_cc registers\n");
+	if (IS_ERR(regmap))
 		return PTR_ERR(regmap);
-	}
 
-	video_pll0_config.l = 0x1f;
-
-	/* Keep video_cc_xo_clk always enabled */
+	clk_fabia_pll_configure(&video_pll0, regmap, &video_pll0_config);
+	/* Keep video_cc_xo_clk always-ON */
 	regmap_update_bits(regmap, 0x984, BIT(0), BIT(0));
 
-	ret = qcom_cc_really_probe(pdev, &video_cc_sm7150_desc, regmap);
-
-	return ret;
+	return qcom_cc_really_probe(pdev, &video_cc_sm7150_desc, regmap);
 }
 
 static struct platform_driver video_cc_sm7150_driver = {
@@ -356,17 +350,7 @@ static struct platform_driver video_cc_sm7150_driver = {
 	},
 };
 
-static int __init video_cc_sm7150_init(void)
-{
-	return platform_driver_register(&video_cc_sm7150_driver);
-}
-subsys_initcall(video_cc_sm7150_init);
+module_platform_driver(video_cc_sm7150_driver);
 
-static void __exit video_cc_sm7150_exit(void)
-{
-	platform_driver_unregister(&video_cc_sm7150_driver);
-}
-module_exit(video_cc_sm7150_exit);
-
-MODULE_DESCRIPTION("QTI VIDEOCC SM7150 Driver");
+MODULE_DESCRIPTION("Qualcomm SM7150 Video Clock Controller");
 MODULE_LICENSE("GPL");
