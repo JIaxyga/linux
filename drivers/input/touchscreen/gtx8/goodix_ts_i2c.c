@@ -50,7 +50,6 @@
 #define REQUEST_CONFIG 0x01
 #define REQUEST_BAKREF 0x02
 #define REQUEST_RESET 0x03
-#define REQUEST_RELOADFW 0x05
 #define REQUEST_IDLE 0xff
 
 #define COMMAND_SLEEP 0x05
@@ -148,7 +147,7 @@ static int goodix_parse_dt(struct device_node *node,
 		ts_err("invalid reset-gpio in dt: %d", r);
 		return -EINVAL;
 	}
-	ts_info("get reset-gpio[%d] from dt", r);
+	ts_debug("get reset-gpio[%d] from dt", r);
 	board_data->reset_gpio = r;
 
 	r = of_get_named_gpio(node, "goodix,irq-gpio", 0);
@@ -156,8 +155,19 @@ static int goodix_parse_dt(struct device_node *node,
 		ts_err("invalid irq-gpio in dt: %d", r);
 		return -EINVAL;
 	}
-	ts_info("get irq-gpio[%d] from dt", r);
+	ts_debug("get irq-gpio[%d] from dt", r);
 	board_data->irq_gpio = r;
+
+	r = of_get_named_gpio(node, "goodix,vdd-gpio", 0);
+	if (r == -ENOENT) {
+		ts_debug("no vdd-gpio in dt");
+		r = 0;
+	} else if (r < 0) {
+		ts_err("invalid vdd-gpio in dt: %d", r);
+		return -EINVAL;
+	}
+	ts_debug("get vdd-gpio[%d] from dt", r);
+	board_data->vdd_gpio = r;
 
 	r = of_property_read_u32(node, "goodix,irq-flags",
 				 &board_data->irq_flags);
@@ -169,19 +179,19 @@ static int goodix_parse_dt(struct device_node *node,
 	memset(board_data->avdd_name, 0, sizeof(board_data->avdd_name));
 	r = of_property_read_string(node, "goodix,avdd-name", &name_tmp);
 	if (!r) {
-		ts_info("avdd name form dt: %s", name_tmp);
+		ts_debug("avdd name from dt: %s", name_tmp);
 		if (strlen(name_tmp) < sizeof(board_data->avdd_name))
 			strncpy(board_data->avdd_name, name_tmp,
 				sizeof(board_data->avdd_name));
 		else
-			ts_info("invalid avdd name length: %ld > %ld",
-				strlen(name_tmp),
-				sizeof(board_data->avdd_name));
+			ts_debug("invalid avdd name length: %ld > %ld",
+				 strlen(name_tmp),
+				 sizeof(board_data->avdd_name));
 	}
 
 	r = of_property_read_u32(node, "vtouch-load", &board_data->avdd_load);
 	if (r) {
-		ts_err("can't get vtouch-load");
+		ts_debug("can't get vtouch-load");
 		board_data->avdd_load = 0;
 	}
 
@@ -235,11 +245,11 @@ static int goodix_parse_dt(struct device_node *node,
 	board_data->pen_enable =
 		of_property_read_bool(node, "goodix,pen-enable");
 	if (board_data->pen_enable)
-		ts_info("goodix pen enabled");
+		ts_debug("goodix pen enabled");
 
-	ts_info("***key:%d, %d, %d, %d", board_data->panel_key_map[0],
-		board_data->panel_key_map[1], board_data->panel_key_map[2],
-		board_data->panel_key_map[3]);
+	ts_debug("***key:%d, %d, %d, %d", board_data->panel_key_map[0],
+		 board_data->panel_key_map[1], board_data->panel_key_map[2],
+		 board_data->panel_key_map[3]);
 
 	ts_debug("[DT]x:%d, y:%d, w:%d, p:%d", board_data->panel_max_x,
 		 board_data->panel_max_y, board_data->panel_max_w,
@@ -356,7 +366,7 @@ int goodix_i2c_read_trans(struct goodix_ts_device *dev, unsigned int reg,
 				address += transfer_length;
 				break;
 			}
-			ts_info("I2c read retry[%d]:0x%x", retry + 1, reg);
+			ts_debug("I2c read retry[%d]:0x%x", retry + 1, reg);
 			msleep(20);
 		}
 		if (unlikely(retry == GOODIX_BUS_RETRY_TIMES)) {
@@ -485,7 +495,7 @@ static int goodix_set_i2c_doze_mode(struct goodix_ts_device *dev, int enable)
 			if (i >= TS_DOZE_ENABLE_RETRY_TIMES)
 				ts_err("i2c doze mode enable failed");
 		} else {
-			/*ts_info("doze count not euqal 0,
+			/*ts_debug("doze count not euqal 0,
 			 * so skip doze mode enable");
 			 */
 			result = 0;
@@ -802,16 +812,16 @@ static int goodix_read_version(struct goodix_ts_device *dev,
 	}
 	if (sensor_id_mask != 0) {
 		version->sensor_id = buffer[0] & sensor_id_mask;
-		ts_info("sensor_id_mask:0x%02x, sensor_id:0x%02x",
-			sensor_id_mask, version->sensor_id);
+		ts_debug("sensor_id_mask:0x%02x, sensor_id:0x%02x",
+			 sensor_id_mask, version->sensor_id);
 	} else {
 		version->sensor_id = buffer[0];
 	}
 
 	version->valid = true;
 
-	ts_info("PID:%s,SensorID:%d, VID:%*ph", version->pid,
-		version->sensor_id, (int)sizeof(version->vid), version->vid);
+	ts_debug("PID:%s,SensorID:%d, VID:%*ph", version->pid,
+		 version->sensor_id, (int)sizeof(version->vid), version->vid);
 exit:
 	/*enable doze mode, just valid for normandy
 	 * this func must be used in pairs
@@ -922,7 +932,7 @@ static int _do_goodix_send_config(struct goodix_ts_device *dev,
 				break;
 			usleep_range(10000, 11000);
 		}
-		ts_info("send config result: %*ph", 3, buf);
+		ts_debug("send config result: %*ph", 3, buf);
 		/* set 0x7D to end send config process */
 		goodix_cmd_init(dev, &ts_cmd, COMMAND_END_SEND_CFG_YS, 0,
 				dev->reg.command);
@@ -941,7 +951,7 @@ static int _do_goodix_send_config(struct goodix_ts_device *dev,
 			if (buf[2] != TS_CFG_REPLY_DATA_EQU)
 				ts_err("failed send cfg");
 			else
-				ts_info("config data equal with flash");
+				ts_debug("config data equal with flash");
 			r = -EINVAL;
 			goto exit;
 		}
@@ -962,7 +972,7 @@ static int _do_goodix_send_config(struct goodix_ts_device *dev,
 		}
 	}
 
-	ts_info("Send cfg SUCCESS");
+	ts_debug("Send cfg SUCCESS");
 	r = 0;
 
 exit:
@@ -996,7 +1006,7 @@ exit:
 	bag_num = cfg[TS_CFG_BAG_NUM_INDEX];
 	bag_start = TS_CFG_BAG_START_INDEX;
 
-	ts_info("cfg bag_num:%d, cfg length:%d", bag_num, length);
+	ts_debug("cfg bag_num:%d, cfg length:%d", bag_num, length);
 	for (j = 0; j < bag_num; j++) {
 		if (bag_start >= length - 1) {
 			ts_err("ERROR, overflow!!bag_start:%d, cfg_len:%d",
@@ -1027,7 +1037,7 @@ exit:
 	}
 
 	ret = 0;
-	ts_info("configuration check SUCCESS");
+	ts_debug("configuration check SUCCESS");
 
 exit:
 	return ret;
@@ -1051,7 +1061,7 @@ static int goodix_send_config(struct goodix_ts_device *dev,
 	// 	return -EINVAL;
 	// }
 
-	ts_info("ver:%02xh,size:%d", config->data[0], config->length);
+	ts_debug("ver:%02xh,size:%d", config->data[0], config->length);
 	mutex_lock(&config->lock);
 
 	/*disable doze mode*/
@@ -1093,7 +1103,7 @@ static int goodix_read_config_ys(struct goodix_ts_device *dev, u8 *buf)
 		goto err_out;
 	}
 
-	ts_info("config_version:%u, vub_bags:%u", buf[0], sub_bags);
+	ts_debug("config_version:%u, vub_bags:%u", buf[0], sub_bags);
 	for (i = 0; i < sub_bags; i++) {
 		/* read sub head [0]: sub bag num, [1]: sub bag length */
 		ret = goodix_i2c_read(dev, cfg_addr + offset, buf + offset, 2);
@@ -1157,7 +1167,7 @@ static int goodix_read_config_nor(struct goodix_ts_device *dev, u8 *buf)
 		goto err_out;
 	}
 
-	ts_info("config_version:%u, vub_bags:%u", buf[0], sub_bags);
+	ts_debug("config_version:%u, vub_bags:%u", buf[0], sub_bags);
 	for (i = 0; i < sub_bags; i++) {
 		/* read sub head [0]: sub bag num, [1]: sub bag length */
 		ret = goodix_i2c_read(dev, cfg_addr + offset, buf + offset, 2);
@@ -1275,7 +1285,7 @@ int goodix_hw_reset(struct goodix_ts_device *dev)
 	u8 data[2] = { 0x00 };
 	int r = 0;
 
-	ts_info("HW reset");
+	ts_debug("HW reset");
 
 	gpio_direction_output(dev->board_data.reset_gpio, 0);
 	udelay(2000);
@@ -1288,7 +1298,7 @@ int goodix_hw_reset(struct goodix_ts_device *dev)
 		if (r < 0)
 			ts_err("IC reset, init dynamic esd FAILED");
 	} else {
-		ts_info("reg.esd is NULL, skip dynamic esd init");
+		ts_debug("reg.esd is NULL, skip dynamic esd init");
 	}
 
 	return 0;
@@ -1312,30 +1322,25 @@ static int goodix_request_handler(struct goodix_ts_device *dev)
 
 	switch (buffer[0]) {
 	case REQUEST_CONFIG:
-		ts_info("HW request config");
+		ts_debug("HW request config");
 		r = goodix_send_config(dev, &(dev->normal_cfg));
 		if (r != 0)
-			ts_info("request config, send config failed");
+			ts_debug("request config, send config failed");
 		break;
 	case REQUEST_BAKREF:
-		ts_info("HW request bakref");
+		ts_debug("HW request bakref");
 		break;
 	case REQUEST_RESET:
-		ts_info("HW requset reset");
+		ts_debug("HW requset reset");
 		r = goodix_hw_reset(dev);
 		if (r != 0)
-			ts_info("request reset, reset failed");
-		break;
-	case REQUEST_RELOADFW:
-		ts_info("HW request reload fw");
-		goodix_do_fw_update(UPDATE_MODE_FORCE |
-				    UPDATE_MODE_SRC_REQUEST);
+			ts_debug("request reset, reset failed");
 		break;
 	case REQUEST_IDLE:
-		ts_info("HW request idle");
+		ts_debug("HW request idle");
 		break;
 	default:
-		ts_info("Unknown hw request:%d", buffer[0]);
+		ts_debug("Unknown hw request:%d", buffer[0]);
 		break;
 	}
 
@@ -1378,7 +1383,7 @@ static void goodix_parse_finger_nor(struct goodix_ts_device *dev,
 	for (i = 0; i < touch_num; i++) {
 		id = coor_data[0];
 		if (id >= GOODIX_MAX_TOUCH) {
-			ts_info("invalid finger id =%d", id);
+			ts_debug("invalid finger id =%d", id);
 			break;
 		}
 		x = le16_to_cpup((__be16 *)(coor_data + 1));
@@ -1438,7 +1443,7 @@ static void goodix_parse_finger_ys(struct goodix_ts_device *dev,
 	for (i = 0; i < touch_num; i++) {
 		id = (coor_data[0] >> 4) & 0x0F;
 		if (id >= GOODIX_MAX_TOUCH) {
-			ts_info("invalid finger id =%d", id);
+			ts_debug("invalid finger id =%d", id);
 			break;
 		}
 		x = be16_to_cpup((__be16 *)(coor_data + 2));
@@ -1521,19 +1526,11 @@ static void goodix_parse_pen_nor(struct goodix_ts_device *dev,
 	pre_key_map = cur_key_map;
 }
 
-static void goodix_parse_pen_ys(struct goodix_ts_device *dev,
-				struct goodix_pen_data *pen_data,
-				unsigned char *buf, int touch_num)
-{
-	ts_info("unsupported");
-}
-
 static int goodix_touch_handler_ys(struct goodix_ts_device *dev,
 				   struct goodix_ts_event *ts_event,
 				   u8 *pre_buf, u32 pre_buf_len)
 {
 	struct goodix_touch_data *touch_data = &ts_event->touch_data;
-	struct goodix_pen_data *pen_data = &ts_event->pen_data;
 	static u8 buffer[IRQ_HEAD_LEN_YS + BYTES_PER_COORD * GOODIX_MAX_TOUCH +
 			 2];
 	int touch_num = 0, r = -EINVAL;
@@ -1585,13 +1582,11 @@ static int goodix_touch_handler_ys(struct goodix_ts_device *dev,
 		} else {
 			pre_pen_num = 1;
 			ts_event->event_type = EVENT_PEN;
-			goodix_parse_pen_ys(dev, pen_data, buffer, touch_num);
 		}
 	} else {
 		/* finger info */
 		if (pre_pen_num) {
 			ts_event->event_type = EVENT_PEN;
-			goodix_parse_pen_ys(dev, pen_data, buffer, 0);
 			pre_pen_num = 0;
 		} else {
 			ts_event->event_type = EVENT_TOUCH;
@@ -1741,7 +1736,7 @@ static int goodix_hw_suspend(struct goodix_ts_device *dev)
 	if (sleep_cmd.initialized) {
 		r = goodix_send_command(dev, &sleep_cmd);
 		if (!r)
-			ts_info("Chip in sleep mode");
+			ts_debug("Chip in sleep mode");
 	} else {
 		ts_err("Uninitialized sleep command");
 	}
@@ -1774,7 +1769,7 @@ static int goodix_esd_check(struct goodix_ts_device *dev)
 	r = dev->hw_ops->read_trans(dev, TS_REG_ESD_TICK_R, &data, 1);
 
 	if (r < 0 || (data == GOODIX_ESD_TICK_WRITE_DATA)) {
-		ts_info("dynamic esd occur, r:%d, data:0x%02x", r, data);
+		ts_debug("dynamic esd occur, r:%d, data:0x%02x", r, data);
 		r = -EINVAL;
 		goto exit;
 	}
@@ -1803,9 +1798,9 @@ static const struct goodix_ts_hw_ops hw_i2c_ops = {
 
 static struct platform_device *goodix_pdev;
 
-static void goodix_pdev_release(struct device *dev)
+static void goodix_pdev_release(struct device *dev __attribute__((unused)))
 {
-	ts_info("goodix pdev released");
+	ts_debug("goodix pdev released");
 }
 
 static int goodix_i2c_probe(struct i2c_client *client)
@@ -1813,7 +1808,7 @@ static int goodix_i2c_probe(struct i2c_client *client)
 	struct goodix_ts_device *ts_device = NULL;
 	int r = 0;
 
-	ts_info("goodix_i2c_probe IN");
+	ts_debug("goodix_i2c_probe IN");
 
 	r = i2c_check_functionality(client->adapter, I2C_FUNC_I2C);
 	if (!r)
@@ -1830,7 +1825,7 @@ static int goodix_i2c_probe(struct i2c_client *client)
 		r = goodix_parse_dt(client->dev.of_node,
 				    &ts_device->board_data);
 		if (r < 0) {
-			ts_err("failed parse device info form dts, %d", r);
+			ts_err("failed parse device info from dts, %d", r);
 			return -EINVAL;
 		}
 	} else {
@@ -1871,7 +1866,7 @@ static int goodix_i2c_probe(struct i2c_client *client)
 		ts_err("failed register platform driver, %d", r);
 		goto err_pdriver;
 	}
-	ts_info("i2c probe out");
+	ts_debug("i2c probe out");
 	return r;
 
 err_pdriver:
@@ -1879,11 +1874,11 @@ err_pdriver:
 err_pdev:
 	kfree(goodix_pdev);
 	goodix_pdev = NULL;
-	ts_info("i2c probe out, %d", r);
+	ts_debug("i2c probe out, %d", r);
 	return r;
 }
 
-static void goodix_i2c_remove(struct i2c_client *client)
+static void goodix_i2c_remove(struct i2c_client *client __attribute__((unused)))
 {
 	if (goodix_pdev) {
 		platform_device_unregister(goodix_pdev);
@@ -1941,14 +1936,14 @@ void goodix_ts_dev_release(void)
 
 static int __init goodix_i2c_init(void)
 {
-	ts_info("Goodix driver init");
+	ts_debug("Goodix driver init");
 	return i2c_add_driver(&goodix_i2c_driver);
 }
 
 static void __exit goodix_i2c_exit(void)
 {
 	i2c_del_driver(&goodix_i2c_driver);
-	ts_info("Goodix driver exit");
+	ts_debug("Goodix driver exit");
 }
 
 module_init(goodix_i2c_init);
